@@ -1,0 +1,11 @@
+*DIM,An,ARRAY,16
+*DIM,Bn,ARRAY,16
+*set,AN(1),gdis(1.2,0.03)
+*set,BN(1),gdis(1.2,0.03)
+*create,sc,mac
+*CFOPEN,DEFECT,INP
+!HE00=330*536*(1-EXP(-0.69/24))  
+*VWRITE,AN(1),BN(1)
+(F15.5,F15.5)
+*CFCLOS
+*end
