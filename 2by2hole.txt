@@ -1,4 +1,4 @@
-finish
+﻿finish
 /clear
 /prep7
  
@@ -41,7 +41,7 @@ lstr,i,i+1
 *enddo
 
 asbl,all,all !从面上分割一部分，按线分割
-
+!老公给你的注释
 !delete holes
 asel,s,loc,x,a,b
 asel,r,loc,y,a,b
@@ -70,6 +70,7 @@ wpoffs,d,
 !激活工作平面坐标系
 CSYS,4
 
+!New english comment by liangzulin
 !随机倾斜
 *DIM,AN,ARRAY,16
 *DIM,BN,ARRAY,16
