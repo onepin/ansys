@@ -151,4 +151,3 @@ al,all
 asel,s,loc,x,c,d,0
 asel,r,loc,y,b,c,0
 adele,all
-!Hi baobei
