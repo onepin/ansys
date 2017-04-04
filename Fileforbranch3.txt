@@ -1,2 +1,3 @@
-This is the continue file for branch 1.
+﻿This is the continue file for branch 1.
 Good for health!
+对分支3添加中文修改
