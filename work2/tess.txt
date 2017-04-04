@@ -1,0 +1,96 @@
+finish
+/clear
+/REPLOT,RESIZE  
+WPSTYLE,,,,,,,,0
+/PREP7  
+FLST,3,1,8  
+FITEM,3,0,0,0   
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,2,0,0   
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,2.7,0,0 
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,4.7,0,0 
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,5.4,0,0 
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,0,2,0   
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,0,2.7,0 
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,0,4.7,0 
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,0,5.4,0 
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,2,2,0   
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,2.7,2,0 
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,4.7,2,0 
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,5.4,2,0 
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,2,2.7,0 
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,2,4.7,0 
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,2,5.4,0 
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,2.7,2.7,0   
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,2.7,4.7,0   
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,2.7,5.4,0   
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,4.7,2.7,0   
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,4.7,4.7,0   
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,4.7,5.4,0   
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,5.4,2.7,0   
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,5.4,4.7,0   
+K, ,P51X
+FLST,3,1,8  
+FITEM,3,5.4,5.4,0   
+K, ,P51X
+LSTR,       1,       2  
+LSTR,       3,       4 
+LSTR,       1,       6
+LSTR,       6,       10
+LSTR,       11,      12
+LSTR,       7,       14
+LSTR,       17,      20
+LSTR,       7,       8
+LSTR,       8,      15
+LSTR,       18,      21
+LSTR,       14,      15
+LSTR,       17,      18  
+LSTR,       20,      21
+
+SAVE
+!*  

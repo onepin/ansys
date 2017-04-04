@@ -1,0 +1,3 @@
+*VREAD,NLOC,'YSEP','INP',' ',JIK,1,7,1,,
+(F8.1)
+*CFCLOS

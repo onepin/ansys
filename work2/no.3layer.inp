@@ -1,0 +1,105 @@
+!随机倾斜
+*DIM,AN,ARRAY,16
+*DIM,BN,ARRAY,16
+*set,AN(1),gdis(1.2,0.03)
+*set,BN(1),gdis(1.2,0.03)
+*DIM,NLOC,ARRAY,7
+/INPUT,ansuitmp 
+*CREATE,ansuitmp
+*VREAD,NLOC,'YSEP','INP',' ',JIK,1,7,1,,   
+(F8.1)
+*CFCLOS
+*END
+
+
+*DIM,Ak,ARRAY,10
+*DIM,Bk,ARRAY,10
+
+
+!一层不同类型缺陷只有一个
+!有两个怎么办？
+!*DIM,kloc,array,7,20
+
+
+
+
+
+
+!需要判断和上一个缺陷是否重叠?
+D=1.5
+*DOWHILE,D
+
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C1,nloc(N)
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C2,nloc(N)
+
+D=C1-C2
+*IF,D,EQ,0,THEN
+D=1
+*ELSE
+*EXIT
+*ENDIF
+*ENDDO
+
+
+
+!随机倾斜
+*set,AN(2,1),gdis(1.2,0.03)
+*set,BN(2,1),gdis(1.2,0.03)
+k,10201,0,C1+AN(2)   !特殊节点号
+k,10202,BN(2),C1     !特殊节点号
+lstr,10201,10202
+!判断是否和下一个线段相交
+k,10203,BN(2)+0.7,C1    !+0.7是厚度!特殊节点号
+k,10204,0,C1+AN(2)+0.7  !+0.7是厚度!特殊节点号
+a,10201,10202,10203,10204
+!将两条线glue?
+asel,s,loc,Y,c1,c1+AN(2),0
+asel,r,loc,X,0,b,0
+AOVLAP,all
+asel,s,loc,Y,c1,c1+AN(2),0
+asel,r,loc,X,0,a,0
+!cm,a_inc01,area
+!cmsel,s,a_inc01,area
+asel,u,loc,y,c1+an(2),c1+an(2)+0.7,0
+adele,all
+
+
+
+
+
+
+
+
+
+
+
+!随机翘曲
+*set,AK(2,1),gdis(1.2,0.03)  !缺陷几何设值
+*set,BK(2,1),gdis(1.2,0.03)  !缺陷几何设值
+k,20201,a+Ak(2),c2+Bk(2)    !对应缺陷节点号
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,u,,,all
+ksel,s,loc,y,c2+2,c2,0
+ksel,r,loc,x,a-0.001,a+0.001,0
+ksel,a,,,20201       !对应缺陷节点号
+BSPLIN,all
+LGEN,2,all, , ,-0.7, , , ,0  
+cm,l_cur1,line
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,s,loc,y,c2-0.0001,c2+0.0001,0  
+lsel,r,loc,x,0,a,0
+cm,l_cur2,line
+lsel,s,loc,y,c2+2-0.0001,c2+2+0.0001,0
+lsel,r,loc,x,0,a,0
+cm,l_cur3,line
+cmsel,s,l_cur1
+cmsel,a,l_cur2
+cmsel,a,l_cur3
+al,all
+asel,s,loc,y,c2,c2+2,0
+asel,r,loc,x,0,a,0
+adele,all
