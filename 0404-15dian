@@ -1,0 +1,1146 @@
+finish
+/clear
+/prep7
+ 
+
+ 
+
+*set,a,0.7
+*set,b,2.7
+
+RECTNG,0,b,0,b,
+
+k,5,0,a,0
+k,6,b,a,0
+
+k,7,a,0,0
+k,8,a,2.7,0
+
+
+*do,i,5,7,2
+lstr,i,i+1
+*enddo 
+
+
+lsel,s,line,,5,6,1
+asbl,all,all,
+
+!delete holes
+asel,s,loc,x,a,b
+asel,r,loc,y,a,b
+adele,all
+allsel
+cm,sca_min_01,area 
+agen,7,sca_min_01,,,,b
+
+rectng,0,a,7*b,7*b+a
+rectng,a,b,7*b,7*b+a
+allsel,all
+nummrg,kp,,,,low
+ 
+allsel
+cm,scay_01,area
+agen,2,scay_01,,,b
+
+!移动工作平面坐标系
+wpoffs,b
+
+!激活工作平面坐标系
+CSYS,4
+
+!随机倾斜
+*DIM,AN,ARRAY,20
+*DIM,BN,ARRAY,20
+*set,AN(1),gdis(1.2,0.03)
+*set,BN(1),gdis(1.2,0.03)
+*DIM,NLOC,ARRAY,7
+/INPUT,ansuitmp 
+*CREATE,ansuitmp
+*VREAD,NLOC,'YSEP','INP',' ',JIK,1,7,1,,   
+(F8.1)
+*CFCLOS
+*END
+
+
+*DIM,Ak,ARRAY,20
+*DIM,Bk,ARRAY,20
+*set,Ak(1),gdis(1.2,0.03)
+*set,Bk(1),gdis(1.2,0.03)
+
+
+*DIM,kloc,array,7
+
+
+!需要判断和上一个缺陷是否重叠?
+D=1.5
+*DOWHILE,D
+
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C1,nloc(N)
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C2,nloc(N)
+
+D=C1-C2
+*IF,D,EQ,0,THEN
+D=1
+*ELSE
+*EXIT
+*ENDIF
+*ENDDO
+
+
+
+
+k,10001,0,C1+AN(1)
+k,10002,BN(1),C1
+lstr,10001,10002
+!判断是否和下一个线段相交
+k,10003,BN(1)+0.7,C1    !+0.7是厚度
+k,10004,0,C1+AN(1)+0.7  !+0.7是厚度
+a,10001,10002,10003,10004
+!将两条线glue?
+asel,s,loc,Y,c1,c1+AN(1),0
+asel,r,loc,X,0,b,0
+AOVLAP,all
+asel,s,loc,Y,c1,c1+AN(1),0
+asel,r,loc,X,0,a,0
+asel,u,loc,y,c1+an(1)-0.2,c1+an(1)+0.7,0
+adele,all
+
+
+
+
+
+
+
+
+
+
+
+!随机翘曲
+k,20001,a+Ak(1),c2+Bk(1)    !对应缺陷节点号
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,u,,,all
+ksel,s,loc,y,c2+2,c2,0
+ksel,r,loc,x,a-0.001,a+0.001,0
+ksel,a,,,20001       !对应缺陷节点号
+BSPLIN,all
+LGEN,2,all, , ,-0.7, , , ,0  
+cm,l_cur1,line
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,s,loc,y,c2-0.0001,c2+0.0001,0
+lsel,r,loc,x,0,a,0
+cm,l_cur2,line
+lsel,s,loc,y,c2+2-0.0001,c2+2+0.0001,0
+lsel,r,loc,x,0,a,0
+cm,l_cur3,line
+cmsel,s,l_cur1
+cmsel,a,l_cur2
+cmsel,a,l_cur3
+al,all
+asel,s,loc,y,c2,c2+2,0
+asel,r,loc,x,0,a,0
+adele,all
+
+
+
+
+
+
+
+
+
+
+
+CSYS,0
+agen,2,SCAY_01,,,2*b !从第一个工作平面n*b
+wpoffs,b  !从上一个工作平面开始移动b
+csys,4
+
+!需要判断和上一个缺陷是否重叠?
+D=1.5
+*DOWHILE,D
+
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C1,nloc(N)
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C2,nloc(N)
+
+D=C1-C2
+*IF,D,EQ,0,THEN
+D=1
+*ELSE
+*EXIT
+*ENDIF
+*ENDDO
+
+
+
+
+!需要判断和上一个缺陷是否重叠?
+D=1.5
+*DOWHILE,D
+
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C1,nloc(N)
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C2,nloc(N)
+
+D=C1-C2
+*IF,D,EQ,0,THEN
+D=1
+*ELSE
+*EXIT
+*ENDIF
+*ENDDO
+
+
+
+!随机倾斜
+*set,AN(2,1),gdis(1.2,0.03)    !缺陷几何设值
+*set,BN(2,1),gdis(1.2,0.03)    !缺陷几何设值
+k,10201,0,C1+AN(2)   !特殊节点号
+k,10202,BN(2),C1     !特殊节点号
+lstr,10201,10202
+!判断是否和下一个线段相交
+k,10203,BN(2)+0.7,C1    !+0.7是厚度!特殊节点号
+k,10204,0,C1+AN(2)+0.7  !+0.7是厚度!特殊节点号
+a,10201,10202,10203,10204
+!将两条线glue?
+asel,s,loc,Y,c1,c1+AN(2),0
+asel,r,loc,X,0,b,0
+AOVLAP,all
+asel,s,loc,Y,c1,c1+AN(2),0
+asel,r,loc,X,0,a,0
+asel,u,loc,y,c1+an(2)-0.2,c1+an(2)+0.7,0
+adele,all
+
+
+
+
+!随机翘曲
+*set,AK(2,1),gdis(1.2,0.03)  !缺陷几何设值
+*set,BK(2,1),gdis(1.2,0.03)  !缺陷几何设值
+k,20201,a+Ak(2),c2+Bk(2)    !对应缺陷节点号
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,u,,,all
+ksel,s,loc,y,c2+2,c2,0
+ksel,r,loc,x,a-0.001,a+0.001,0
+ksel,a,,,20201       !对应缺陷节点号
+BSPLIN,all
+LGEN,2,all, , ,-0.7, , , ,0  
+cm,l_cur1,line
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,s,loc,y,c2-0.0001,c2+0.0001,0  
+lsel,r,loc,x,0,a,0
+cm,l_cur2,line
+lsel,s,loc,y,c2+2-0.0001,c2+2+0.0001,0
+lsel,r,loc,x,0,a,0
+cm,l_cur3,line
+cmsel,s,l_cur1
+cmsel,a,l_cur2
+cmsel,a,l_cur3
+al,all
+asel,s,loc,y,c2,c2+2,0
+asel,r,loc,x,0,a,0
+adele,all
+
+
+
+CSYS,0
+agen,2,SCAY_01,,,3*b !从第一个工作平面n*b
+wpoffs,b  !从上一个工作平面开始移动b
+csys,4
+
+!需要判断和上一个缺陷是否重叠?
+D=1.5
+*DOWHILE,D
+
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C1,nloc(N)
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C2,nloc(N)
+
+D=C1-C2
+*IF,D,EQ,0,THEN
+D=1
+*ELSE
+*EXIT
+*ENDIF
+*ENDDO
+
+
+
+
+!需要判断和上一个缺陷是否重叠?
+D=1.5
+*DOWHILE,D
+
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C1,nloc(N)
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C2,nloc(N)
+
+D=C1-C2
+*IF,D,EQ,0,THEN
+D=1
+*ELSE
+*EXIT
+*ENDIF
+*ENDDO
+
+
+
+!随机倾斜
+*set,AN(3,1),gdis(1.2,0.03)    !缺陷几何设值
+*set,BN(3,1),gdis(1.2,0.03)    !缺陷几何设值
+k,10301,0,C1+AN(3)   !特殊节点号
+k,10302,BN(3),C1     !特殊节点号
+lstr,10301,10302
+!判断是否和下一个线段相交
+k,10303,BN(3)+0.7,C1    !+0.7是厚度!特殊节点号
+k,10304,0,C1+AN(3)+0.7  !+0.7是厚度!特殊节点号
+a,10301,10302,10303,10304
+!将两条线glue?
+asel,s,loc,Y,c1,c1+AN(3),0
+asel,r,loc,X,0,b,0
+AOVLAP,all
+asel,s,loc,Y,c1,c1+AN(3),0
+asel,r,loc,X,0,a,0
+asel,u,loc,y,c1+an(3)-0.2,c1+an(3)+0.7,0
+adele,all
+
+
+
+
+!随机翘曲
+*set,AK(3,1),gdis(1.2,0.03)  !缺陷几何设值
+*set,BK(3,1),gdis(1.2,0.03)  !缺陷几何设值
+k,20301,a+Ak(3),c2+Bk(3)    !对应缺陷节点号
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,u,,,all
+ksel,s,loc,y,c2+2,c2,0
+ksel,r,loc,x,a-0.001,a+0.001,0
+ksel,a,,,20301       !对应缺陷节点号
+BSPLIN,all
+LGEN,2,all, , ,-0.7, , , ,0  
+cm,l_cur1,line
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,s,loc,y,c2-0.0001,c2+0.0001,0  
+lsel,r,loc,x,0,a,0
+cm,l_cur2,line
+lsel,s,loc,y,c2+2-0.0001,c2+2+0.0001,0
+lsel,r,loc,x,0,a,0
+cm,l_cur3,line
+cmsel,s,l_cur1
+cmsel,a,l_cur2
+cmsel,a,l_cur3
+al,all
+asel,s,loc,y,c2,c2+2,0
+asel,r,loc,x,0,a,0
+adele,all
+
+
+
+
+CSYS,0
+agen,2,SCAY_01,,,4*b !从第一个工作平面n*b
+wpoffs,b  !从上一个工作平面开始移动b
+csys,4
+
+!需要判断和上一个缺陷是否重叠?
+D=1.5
+*DOWHILE,D
+
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C1,nloc(N)
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C2,nloc(N)
+
+D=C1-C2
+*IF,D,EQ,0,THEN
+D=1
+*ELSE
+*EXIT
+*ENDIF
+*ENDDO
+
+
+
+
+!需要判断和上一个缺陷是否重叠?
+D=1.5
+*DOWHILE,D
+
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C1,nloc(N)
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C2,nloc(N)
+
+D=C1-C2
+*IF,D,EQ,0,THEN
+D=1
+*ELSE
+*EXIT
+*ENDIF
+*ENDDO
+
+
+
+!随机倾斜
+*set,AN(4,1),gdis(1.2,0.03)    !缺陷几何设值
+*set,BN(4,1),gdis(1.2,0.03)    !缺陷几何设值
+k,10401,0,C1+AN(4)   !特殊节点号
+k,10402,BN(4),C1     !特殊节点号
+lstr,10401,10402
+!判断是否和下一个线段相交
+k,10403,BN(4)+0.7,C1    !+0.7是厚度!特殊节点号
+k,10404,0,C1+AN(4)+0.7  !+0.7是厚度!特殊节点号
+a,10401,10402,10403,10404
+!将两条线glue?
+asel,s,loc,Y,c1,c1+AN(4),0
+asel,r,loc,X,0,b,0
+AOVLAP,all
+asel,s,loc,Y,c1,c1+AN(4),0
+asel,r,loc,X,0,a,0
+asel,u,loc,y,c1+an(4)-0.2,c1+an(4)+0.7,0
+adele,all
+
+
+
+
+!随机翘曲
+*set,AK(4,1),gdis(1.2,0.03)  !缺陷几何设值
+*set,BK(4,1),gdis(1.2,0.03)  !缺陷几何设值
+k,20401,a+Ak(4),c2+Bk(4)    !对应缺陷节点号
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,u,,,all
+ksel,s,loc,y,c2+2,c2,0
+ksel,r,loc,x,a-0.001,a+0.001,0
+ksel,a,,,20401       !对应缺陷节点号
+BSPLIN,all
+LGEN,2,all, , ,-0.7, , , ,0  
+cm,l_cur1,line
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,s,loc,y,c2-0.0001,c2+0.0001,0  
+lsel,r,loc,x,0,a,0
+cm,l_cur2,line
+lsel,s,loc,y,c2+2-0.0001,c2+2+0.0001,0
+lsel,r,loc,x,0,a,0
+cm,l_cur3,line
+cmsel,s,l_cur1
+cmsel,a,l_cur2
+cmsel,a,l_cur3
+al,all
+asel,s,loc,y,c2,c2+2,0
+asel,r,loc,x,0,a,0
+adele,all
+
+
+
+
+
+
+
+CSYS,0
+agen,2,SCAY_01,,,5*b !从第一个工作平面n*b
+wpoffs,b  !从上一个工作平面开始移动b
+csys,4
+
+!需要判断和上一个缺陷是否重叠?
+D=1.5
+*DOWHILE,D
+
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C1,nloc(N)
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C2,nloc(N)
+
+D=C1-C2
+*IF,D,EQ,0,THEN
+D=1
+*ELSE
+*EXIT
+*ENDIF
+*ENDDO
+
+
+
+
+!需要判断和上一个缺陷是否重叠?
+D=1.5
+*DOWHILE,D
+
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C1,nloc(N)
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C2,nloc(N)
+
+D=C1-C2
+*IF,D,EQ,0,THEN
+D=1
+*ELSE
+*EXIT
+*ENDIF
+*ENDDO
+
+
+
+!随机倾斜
+*set,AN(5,1),gdis(1.2,0.03)    !缺陷几何设值
+*set,BN(5,1),gdis(1.2,0.03)    !缺陷几何设值
+k,10501,0,C1+AN(5)   !特殊节点号,AN
+k,10502,BN(5),C1     !特殊节点号,BN
+lstr,10501,10502
+!判断是否和下一个线段相交
+k,10503,BN(5)+0.7,C1    !+0.7是厚度!特殊节点号,BN
+k,10504,0,C1+AN(5)+0.7  !+0.7是厚度!特殊节点号,AN
+a,10501,10502,10503,10504
+!将两条线glue?
+asel,s,loc,Y,c1,c1+AN(5),0     !,AN
+asel,r,loc,X,0,b,0
+AOVLAP,all
+asel,s,loc,Y,c1,c1+AN(5),0     !,AN
+asel,r,loc,X,0,a,0
+asel,u,loc,y,c1+an(5)-0.2,c1+an(5)+0.7,0  !,AN
+adele,all
+
+
+
+
+!随机翘曲
+*set,AK(5,1),gdis(1.2,0.03)  !缺陷几何设值
+*set,BK(5,1),gdis(1.2,0.03)  !缺陷几何设值
+k,20501,a+Ak(5),c2+Bk(5)    !对应缺陷节点号,!,AK,BK
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,u,,,all
+ksel,s,loc,y,c2+2,c2,0
+ksel,r,loc,x,a-0.001,a+0.001,0
+ksel,a,,,20501       !对应缺陷节点号
+BSPLIN,all
+LGEN,2,all, , ,-0.7, , , ,0  
+cm,l_cur1,line
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,s,loc,y,c2-0.0001,c2+0.0001,0  
+lsel,r,loc,x,0,a,0
+cm,l_cur2,line
+lsel,s,loc,y,c2+2-0.0001,c2+2+0.0001,0
+lsel,r,loc,x,0,a,0
+cm,l_cur3,line
+cmsel,s,l_cur1
+cmsel,a,l_cur2
+cmsel,a,l_cur3
+al,all
+asel,s,loc,y,c2,c2+2,0
+asel,r,loc,x,0,a,0
+adele,all
+
+
+
+
+CSYS,0
+agen,2,SCAY_01,,,6*b !从第一个工作平面n*b
+wpoffs,b  !从上一个工作平面开始移动b
+csys,4
+
+!需要判断和上一个缺陷是否重叠?
+D=1.5
+*DOWHILE,D
+
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C1,nloc(N)
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C2,nloc(N)
+
+D=C1-C2
+*IF,D,EQ,0,THEN
+D=1
+*ELSE
+*EXIT
+*ENDIF
+*ENDDO
+
+
+
+
+!需要判断和上一个缺陷是否重叠?
+D=1.5
+*DOWHILE,D
+
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C1,nloc(N)
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C2,nloc(N)
+
+D=C1-C2
+*IF,D,EQ,0,THEN
+D=1
+*ELSE
+*EXIT
+*ENDIF
+*ENDDO
+
+
+
+!随机倾斜
+*set,AN(6,1),gdis(1.2,0.03)    !缺陷几何设值
+*set,BN(6,1),gdis(1.2,0.03)    !缺陷几何设值
+k,10601,0,C1+AN(6)   !特殊节点号,AN
+k,10602,BN(6),C1     !特殊节点号,BN
+lstr,10601,10602
+!判断是否和下一个线段相交
+k,10603,BN(6)+0.7,C1    !+0.7是厚度!特殊节点号,BN
+k,10604,0,C1+AN(6)+0.7  !+0.7是厚度!特殊节点号,AN
+a,10601,10602,10603,10604
+!将两条线glue?
+asel,s,loc,Y,c1,c1+AN(6),0     !,AN
+asel,r,loc,X,0,b,0
+AOVLAP,all
+asel,s,loc,Y,c1,c1+AN(6),0     !,AN
+asel,r,loc,X,0,a,0
+asel,u,loc,y,c1+an(6)-0.2,c1+an(6)+0.7,0  !,AN
+adele,all
+
+
+
+
+!随机翘曲
+*set,AK(6,1),gdis(1.2,0.03)  !缺陷几何设值
+*set,BK(6,1),gdis(1.2,0.03)  !缺陷几何设值
+k,20601,a+Ak(6),c2+Bk(6)    !对应缺陷节点号,!,AK,BK
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,u,,,all
+ksel,s,loc,y,c2+2,c2,0
+ksel,r,loc,x,a-0.001,a+0.001,0
+ksel,a,,,20601       !对应缺陷节点号
+BSPLIN,all
+LGEN,2,all, , ,-0.7, , , ,0  
+cm,l_cur1,line
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,s,loc,y,c2-0.0001,c2+0.0001,0  
+lsel,r,loc,x,0,a,0
+cm,l_cur2,line
+lsel,s,loc,y,c2+2-0.0001,c2+2+0.0001,0
+lsel,r,loc,x,0,a,0
+cm,l_cur3,line
+cmsel,s,l_cur1
+cmsel,a,l_cur2
+cmsel,a,l_cur3
+al,all
+asel,s,loc,y,c2,c2+2,0
+asel,r,loc,x,0,a,0
+adele,all
+
+
+
+
+
+
+CSYS,0
+agen,2,SCAY_01,,,7*b !从第一个工作平面n*b
+wpoffs,b  !从上一个工作平面开始移动b
+csys,4
+
+!需要判断和上一个缺陷是否重叠?
+D=1.5
+*DOWHILE,D
+
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C1,nloc(N)
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C2,nloc(N)
+
+D=C1-C2
+*IF,D,EQ,0,THEN
+D=1
+*ELSE
+*EXIT
+*ENDIF
+*ENDDO
+
+
+
+
+!需要判断和上一个缺陷是否重叠?
+D=1.5
+*DOWHILE,D
+
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C1,nloc(N)
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C2,nloc(N)
+
+D=C1-C2
+*IF,D,EQ,0,THEN
+D=1
+*ELSE
+*EXIT
+*ENDIF
+*ENDDO
+
+
+
+
+
+
+
+
+!随机倾斜
+*set,AN(7,1),gdis(1.2,0.03)    !缺陷几何设值
+*set,BN(7,1),gdis(1.2,0.03)    !缺陷几何设值
+k,10701,0,C1+AN(7)   !特殊节点号,AN
+k,10702,BN(7),C1     !特殊节点号,BN
+lstr,10701,10702
+!判断是否和下一个线段相交
+k,10703,BN(7)+0.7,C1    !+0.7是厚度!特殊节点号,BN
+k,10704,0,C1+AN(7)+0.7  !+0.7是厚度!特殊节点号,AN
+a,10701,10702,10703,10704
+!将两条线glue?
+asel,s,loc,Y,c1,c1+AN(7),0     !,AN
+asel,r,loc,X,0,b,0
+AOVLAP,all
+asel,s,loc,Y,c1,c1+AN(7),0     !,AN
+asel,r,loc,X,0,a,0
+asel,u,loc,y,c1+an(7)-0.2,c1+an(7)+0.7,0  !,AN
+adele,all
+
+
+
+
+!随机翘曲
+*set,AK(7,1),gdis(1.2,0.03)  !缺陷几何设值
+*set,BK(7,1),gdis(1.2,0.03)  !缺陷几何设值
+k,20701,a+Ak(7),c2+Bk(7)    !对应缺陷节点号,!,AK,BK
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,u,,,all
+ksel,s,loc,y,c2+2,c2,0
+ksel,r,loc,x,a-0.001,a+0.001,0
+ksel,a,,,20701       !对应缺陷节点号
+BSPLIN,all
+LGEN,2,all, , ,-0.7, , , ,0  
+cm,l_cur1,line
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,s,loc,y,c2-0.0001,c2+0.0001,0  
+lsel,r,loc,x,0,a,0
+cm,l_cur2,line
+lsel,s,loc,y,c2+2-0.0001,c2+2+0.0001,0
+lsel,r,loc,x,0,a,0
+cm,l_cur3,line
+cmsel,s,l_cur1
+cmsel,a,l_cur2
+cmsel,a,l_cur3
+al,all
+asel,s,loc,y,c2,c2+2,0
+asel,r,loc,x,0,a,0
+adele,all
+
+
+
+
+
+
+
+
+
+
+CSYS,0
+agen,2,SCAY_01,,,8*b !从第一个工作平面n*b
+wpoffs,b  !从上一个工作平面开始移动b
+csys,4
+
+!需要判断和上一个缺陷是否重叠?
+D=1.5
+*DOWHILE,D
+
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C1,nloc(N)
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C2,nloc(N)
+
+D=C1-C2
+*IF,D,EQ,0,THEN
+D=1
+*ELSE
+*EXIT
+*ENDIF
+*ENDDO
+
+
+
+
+!需要判断和上一个缺陷是否重叠?
+D=1.5
+*DOWHILE,D
+
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C1,nloc(N)
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C2,nloc(N)
+
+D=C1-C2
+*IF,D,EQ,0,THEN
+D=1
+*ELSE
+*EXIT
+*ENDIF
+*ENDDO
+
+
+
+!随机倾斜
+*set,AN(8,1),gdis(1.2,0.03)    !缺陷几何设值
+*set,BN(8,1),gdis(1.2,0.03)    !缺陷几何设值
+k,10801,0,C1+AN(8)   !特殊节点号,AN
+k,10802,BN(8),C1     !特殊节点号,BN
+lstr,10801,10802
+!判断是否和下一个线段相交
+k,10803,BN(8)+0.7,C1    !+0.7是厚度!特殊节点号,BN
+k,10804,0,C1+AN(8)+0.7  !+0.7是厚度!特殊节点号,AN
+a,10801,10802,10803,10804
+!将两条线glue?
+asel,s,loc,Y,c1,c1+AN(8),0     !,AN
+asel,r,loc,X,0,b,0
+AOVLAP,all
+asel,s,loc,Y,c1,c1+AN(8),0     !,AN
+asel,r,loc,X,0,a,0
+asel,u,loc,y,c1+an(8)-0.2,c1+an(8)+0.7,0  !,AN
+adele,all
+
+
+
+
+!随机翘曲
+*set,AK(8,1),gdis(1.2,0.03)  !缺陷几何设值
+*set,BK(8,1),gdis(1.2,0.03)  !缺陷几何设值
+k,20801,a+Ak(8),c2+Bk(8)    !对应缺陷节点号,!,AK,BK
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,u,,,all
+ksel,s,loc,y,c2+2,c2,0
+ksel,r,loc,x,a-0.001,a+0.001,0
+ksel,a,,,20801       !对应缺陷节点号
+BSPLIN,all
+LGEN,2,all, , ,-0.7, , , ,0  
+cm,l_cur1,line
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,s,loc,y,c2-0.0001,c2+0.0001,0  
+lsel,r,loc,x,0,a,0
+cm,l_cur2,line
+lsel,s,loc,y,c2+2-0.0001,c2+2+0.0001,0
+lsel,r,loc,x,0,a,0
+cm,l_cur3,line
+cmsel,s,l_cur1
+cmsel,a,l_cur2
+cmsel,a,l_cur3
+al,all
+asel,s,loc,y,c2,c2+2,0
+asel,r,loc,x,0,a,0
+adele,all
+
+
+
+
+CSYS,0
+agen,2,SCAY_01,,,9*b !从第一个工作平面n*b
+wpoffs,b  !从上一个工作平面开始移动b
+csys,4
+
+!需要判断和上一个缺陷是否重叠?
+D=1.5
+*DOWHILE,D
+
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C1,nloc(N)
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C2,nloc(N)
+
+D=C1-C2
+*IF,D,EQ,0,THEN
+D=1
+*ELSE
+*EXIT
+*ENDIF
+*ENDDO
+
+
+
+
+!需要判断和上一个缺陷是否重叠?
+D=1.5
+*DOWHILE,D
+
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C1,nloc(N)
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C2,nloc(N)
+
+D=C1-C2
+*IF,D,EQ,0,THEN
+D=1
+*ELSE
+*EXIT
+*ENDIF
+*ENDDO
+
+
+
+!随机倾斜
+*set,AN(9,1),gdis(1.2,0.03)    !缺陷几何设值
+*set,BN(9,1),gdis(1.2,0.03)    !缺陷几何设值
+k,10901,0,C1+AN(9)   !特殊节点号,AN
+k,10902,BN(9),C1     !特殊节点号,BN
+lstr,10901,10902
+!判断是否和下一个线段相交
+k,10903,BN(9)+0.7,C1    !+0.7是厚度!特殊节点号,BN
+k,10904,0,C1+AN(9)+0.7  !+0.7是厚度!特殊节点号,AN
+a,10901,10902,10903,10904
+!将两条线glue?
+asel,s,loc,Y,c1,c1+AN(9),0     !,AN
+asel,r,loc,X,0,b,0
+AOVLAP,all
+asel,s,loc,Y,c1,c1+AN(9),0     !,AN
+asel,r,loc,X,0,a,0
+asel,u,loc,y,c1+an(9)-0.2,c1+an(9)+0.7,0  !,AN
+adele,all
+
+
+
+
+!随机翘曲
+*set,AK(9,1),gdis(1.2,0.03)  !缺陷几何设值
+*set,BK(9,1),gdis(1.2,0.03)  !缺陷几何设值
+k,20901,a+Ak(9),c2+Bk(9)    !对应缺陷节点号,!,AK,BK
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,u,,,all
+ksel,s,loc,y,c2+2,c2,0
+ksel,r,loc,x,a-0.001,a+0.001,0
+ksel,a,,,20901       !对应缺陷节点号
+BSPLIN,all
+LGEN,2,all, , ,-0.7, , , ,0  
+cm,l_cur1,line
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,s,loc,y,c2-0.0001,c2+0.0001,0  
+lsel,r,loc,x,0,a,0
+cm,l_cur2,line
+lsel,s,loc,y,c2+2-0.0001,c2+2+0.0001,0
+lsel,r,loc,x,0,a,0
+cm,l_cur3,line
+cmsel,s,l_cur1
+cmsel,a,l_cur2
+cmsel,a,l_cur3
+al,all
+asel,s,loc,y,c2,c2+2,0
+asel,r,loc,x,0,a,0
+adele,all
+
+
+
+
+CSYS,0
+agen,2,SCAY_01,,,10*b !从第一个工作平面n*b
+wpoffs,b  !从上一个工作平面开始移动b
+csys,4
+
+!需要判断和上一个缺陷是否重叠?
+D=1.5
+*DOWHILE,D
+
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C1,nloc(N)
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C2,nloc(N)
+
+D=C1-C2
+*IF,D,EQ,0,THEN
+D=1
+*ELSE
+*EXIT
+*ENDIF
+*ENDDO
+
+
+
+
+!需要判断和上一个缺陷是否重叠?
+D=1.5
+*DOWHILE,D
+
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C1,nloc(N)
+*SET,N,(NINT(0.5+7*rand(0,1)))  
+*set,C2,nloc(N)
+
+D=C1-C2
+*IF,D,EQ,0,THEN
+D=1
+*ELSE
+*EXIT
+*ENDIF
+*ENDDO
+
+
+
+!随机倾斜
+*set,AN(10,1),gdis(1.2,0.03)    !缺陷几何设值
+*set,BN(10,1),gdis(1.2,0.03)    !缺陷几何设值
+k,101001,0,C1+AN(10)   !特殊节点号,AN
+k,101002,BN(10),C1     !特殊节点号,BN
+lstr,101001,101002
+!判断是否和下一个线段相交
+k,101003,BN(10)+0.7,C1    !+0.7是厚度!特殊节点号,BN
+k,101004,0,C1+AN(10)+0.7  !+0.7是厚度!特殊节点号,AN
+a,101001,101002,101003,101004
+!将两条线glue?
+asel,s,loc,Y,c1,c1+AN(10),0     !,AN
+asel,r,loc,X,0,b,0
+AOVLAP,all
+asel,s,loc,Y,c1,c1+AN(10),0     !,AN
+asel,r,loc,X,0,a,0
+asel,u,loc,y,c1+an(10)-0.2,c1+an(10)+0.7,0  !,AN
+adele,all
+
+
+
+
+!随机翘曲
+*set,AK(10,1),gdis(1.2,0.03)  !缺陷几何设值
+*set,BK(10,1),gdis(1.2,0.03)  !缺陷几何设值
+k,201001,a+Ak(10),c2+Bk(10)    !对应缺陷节点号,!,AK,BK
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,u,,,all
+ksel,s,loc,y,c2+2,c2,0
+ksel,r,loc,x,a-0.001,a+0.001,0
+ksel,a,,,201001       !对应缺陷节点号
+BSPLIN,all
+LGEN,2,all, , ,-0.7, , , ,0  
+cm,l_cur1,line
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,s,loc,y,c2-0.0001,c2+0.0001,0  
+lsel,r,loc,x,0,a,0
+cm,l_cur2,line
+lsel,s,loc,y,c2+2-0.0001,c2+2+0.0001,0
+lsel,r,loc,x,0,a,0
+cm,l_cur3,line
+cmsel,s,l_cur1
+cmsel,a,l_cur2
+cmsel,a,l_cur3
+al,all
+asel,s,loc,y,c2,c2+2,0
+asel,r,loc,x,0,a,0
+adele,all
+
+
+
+
+
+
+
+!赋材料属性，求解计算
+ET,1,PLANE183
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,EX,1,,30 
+MPDATA,PRXY,1,,0.3 
+
+
+SAVE,'01','DB','',MODEL
+
+
+
+
+
+
+
+TYPE,   1   
+MAT,       1
+REAL,   
+ESYS,       0   
+SECNUM, 
+ 
+SMRT,1  
+MSHAPE,0,3D 
+MSHKEY,0
+ASEL,ALL
+
+
+AMESH,ALL   
+
+
+
+
+
+
+
+
+ 
+ET,2,SOLID185  
+type,2
+mat,1
+extopt,esize,20
+
+lsel,u,,,all
+csys,0
+k,10000,0,0,11.5
+l,1,10000
+cm,dline1,line
+
+ASEL,ALL
+vdrag,ALL,,,,,,dline1
+
+
+
+/sol
+nsel,s,loc,x,0-0.001,0+0.0001,
+d,ALL, ,0,,,,UX,,,,,
+nsel,s,loc,x,0-0.001,0+0.001,
+nsel,r,loc,y,0-0.001,0+0.001,
+d,all, ,0,,,,UY,,,,,
+nsel,s,loc,x,0-0.001,0+0.001,
+nsel,r,loc,y,0-0.001,0+0.001,
+nsel,r,loc,z,0-0.001,0+0.001,
+d,all, ,0,,,,ALL, , , , ,
+
+allsel,all
+Asel,s,loc,x,11*b-0.0001,11*b+0.0001,
+
+!SFA,ALL,1,PRES,-10 
+DA,all,UX,-0.115
+
+ALLSEL,ALL
+antype,0
+finish
+/solu
+solve
+
+
+
+
+
+
+
+
+
+
+
+
+
+
