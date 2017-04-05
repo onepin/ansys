@@ -1,0 +1,90 @@
+finish
+/clear
+/BATCH  
+!/input,menust,tmp,''
+WPSTYLE,,,,,,,,0
+/prep7  
+rectng,0,12,0,12
+!circle,(6,6),3  
+k,10000,6,6 
+circle,10000,3  
+
+allsel,all  
+lsel,s,line,,5,8,1  
+
+  
+asbl,1,all,,,   
+APLOT   
+adele,2 
+
+ET,1,PLANE183   
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,EX,1,,30 
+MPDATA,PRXY,1,,0.3  
+SAVE,'02','DB','',MODEL 
+TYPE,   1   
+MAT,       1
+REAL,   
+ESYS,       0   
+SECNUM, 
+SMRT,1  
+MSHAPE,0,3D 
+MSHKEY,0
+ASEL,ALL
+AMESH,ALL  
+
+ET,2,SOLID185  
+type,2
+mat,1
+extopt,esize,4
+
+lsel,u,,,all
+csys,0
+k,10000,0,0,2
+l,1,10000
+cm,dline1,line
+
+ASEL,ALL
+vdrag,ALL,,,,,,dline1 
+FINISH  
+/SOL
+
+   
+allsel,all  
+
+asel,s,loc,x,0-0.0001,0+0.0001
+asel,r,loc,y,0,12
+
+Da,all, ,ALL,  
+
+asel,s,loc,x,12-0.0001,12+0.0001
+asel,r,loc,y,0,12
+Da,all, ,UX,0.12   
+/STATUS,SOLU
+SOLVE   
+
+
+
+*Get,nnod,NODE,0,COUNT      
+*Dim,xyz,array,nnod,4  
+*Dim,nodes,array,nnod      
+*Get,nd,NODE,0,NUM,MIN  
+*Do,I,1,nnod,1     
+xyz(I,1)= nd     
+xyz(I,2) = Nx(nd)     
+xyz(I,3) = Ny(nd)
+xyz(I,4) = Nz(nd)     
+nd = Ndnext(nd)  
+*Enddo      
+*Get,nelm,ELEM,0,COUNT      
+*Dim,elems,array,nelm  
+*Dim,ndlst,array,nelm,8      
+*Get,el,ELEM,0,NUM,MIN  
+*Do,I,1,nelm,1     
+elems(I)= el     
+*Do,J,1,8         
+ndlst(I,J) = Nelem(el,J)     
+*Enddo      
+el = Elnext(nd)  
+*Enddo
