@@ -1,0 +1,281 @@
+finish
+/clear
+/prep7
+ 
+
+ 
+
+*set,a,0.7
+*set,b,2.7
+
+RECTNG,0,b,0,b,
+
+k,5,0,a,0
+k,6,b,a,0
+
+k,7,a,0,0
+k,8,a,2.7,0
+
+
+*do,i,5,7,2
+lstr,i,i+1
+*enddo 
+
+
+lsel,s,line,,5,6,1
+asbl,all,all,
+
+!delete holes
+asel,s,loc,x,a,b
+asel,r,loc,y,a,b
+adele,all
+allsel
+cm,sca_min_01,area 
+agen,7,sca_min_01,,,,b
+
+rectng,0,a,7*b,7*b+a
+rectng,a,b,7*b,7*b+a
+allsel,all
+nummrg,kp,,,,low
+ 
+allsel
+cm,scay_01,area
+agen,2,scay_01,,,b
+
+!移动工作平面坐标系
+wpoffs,b
+
+!激活工作平面坐标系
+CSYS,4
+
+
+*DIM,NLOC,ARRAY,7
+/INPUT,ansuitmp 
+*CREATE,ansuitmp
+*VREAD,NLOC,'YSEP','INP',' ',JIK,1,7,1,,   
+(F8.1)
+*CFCLOS
+*END
+
+
+*DIM,Ak,ARRAY,20
+*DIM,Bk,ARRAY,20
+*set,Ak(1),gdis(0.6,0.03)
+*set,Bk(1),gdis(1.2,0.03)
+
+
+!*DIM,kloc,array,7
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CSYS,0
+agen,2,SCAY_01,,,2*b !从第一个工作平面n*b
+wpoffs,b  !从上一个工作平面开始移动b
+csys,4
+
+
+CSYS,0
+agen,2,SCAY_01,,,3*b !从第一个工作平面n*b
+wpoffs,b  !从上一个工作平面开始移动b
+csys,4
+
+
+CSYS,0
+agen,2,SCAY_01,,,4*b !从第一个工作平面n*b
+wpoffs,b  !从上一个工作平面开始移动b
+csys,4
+
+
+
+
+CSYS,0
+agen,2,SCAY_01,,,5*b !从第一个工作平面n*b
+wpoffs,b  !从上一个工作平面开始移动b
+csys,4
+
+
+*DO,I,1,7,1
+*SET,C2,NLOC(I)
+!第I层翘曲
+!*set,c2,0.7
+k,20000+i,a+Ak(1),c2+Bk(1)    !对应缺陷节点号
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,u,,,all
+ksel,s,loc,y,c2+2,c2,0
+ksel,r,loc,x,a-0.001,a+0.001,0
+ksel,a,,,20000+i       !对应缺陷节点号
+BSPLIN,all
+LGEN,2,all, , ,-0.7, , , ,0  
+cm,l_cur1,line
+allsel,all
+NUMMRG,KP, , , ,LOW 
+lsel,s,loc,y,c2-0.0001,c2+0.0001,0
+lsel,r,loc,x,0,a,0
+cm,l_cur2,line
+lsel,s,loc,y,c2+2-0.0001,c2+2+0.0001,0
+lsel,r,loc,x,0,a,0
+cm,l_cur3,line
+cmsel,s,l_cur1
+cmsel,a,l_cur2
+cmsel,a,l_cur3
+al,all
+asel,s,loc,y,c2,c2+2,0
+asel,r,loc,x,0,a,0
+adele,all
+
+
+*ENDDO
+
+
+
+
+CSYS,0
+agen,2,SCAY_01,,,6*b !从第一个工作平面n*b
+wpoffs,b  !从上一个工作平面开始移动b
+csys,4
+
+
+
+CSYS,0
+agen,2,SCAY_01,,,7*b !从第一个工作平面n*b
+wpoffs,b  !从上一个工作平面开始移动b
+csys,4
+
+
+
+
+CSYS,0
+agen,2,SCAY_01,,,8*b !从第一个工作平面n*b
+wpoffs,b  !从上一个工作平面开始移动b
+csys,4
+
+
+CSYS,0
+agen,2,SCAY_01,,,9*b !从第一个工作平面n*b
+wpoffs,b  !从上一个工作平面开始移动b
+csys,4
+
+
+
+CSYS,0
+agen,2,SCAY_01,,,10*b !从第一个工作平面n*b
+wpoffs,b  !从上一个工作平面开始移动b
+csys,4
+
+
+
+!赋材料属性，求解计算
+ET,1,PLANE183
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,EX,1,,30 
+MPDATA,PRXY,1,,0.3 
+
+
+SAVE,'01','DB','',MODEL
+
+
+
+
+
+
+
+TYPE,   1   
+MAT,       1
+REAL,   
+ESYS,       0   
+SECNUM, 
+ 
+SMRT,1  
+MSHAPE,0,3D 
+MSHKEY,0
+ASEL,ALL
+
+
+AMESH,ALL   
+
+
+
+
+
+
+
+
+ 
+ET,2,SOLID185  
+type,2
+mat,1
+extopt,esize,20
+
+lsel,u,,,all
+csys,0
+k,10000,0,0,11.5
+l,1,10000
+cm,dline1,line
+
+ASEL,ALL
+vdrag,ALL,,,,,,dline1
+
+
+
+/sol
+nsel,s,loc,x,0-0.001,0+0.0001,
+d,ALL, ,0,,,,UX,,,,,
+nsel,s,loc,x,0-0.001,0+0.001,
+nsel,r,loc,y,0-0.001,0+0.001,
+d,all, ,0,,,,UY,,,,,
+nsel,s,loc,x,0-0.001,0+0.001,
+nsel,r,loc,y,0-0.001,0+0.001,
+nsel,r,loc,z,0-0.001,0+0.001,
+d,all, ,0,,,,ALL, , , , ,
+
+allsel,all
+Asel,s,loc,x,11*b-0.0001,11*b+0.0001,
+
+!SFA,ALL,1,PRES,-10 
+DA,all,UX,-0.297
+
+ALLSEL,ALL
+antype,0
+finish
+/solu
+eresx,no
+allsel,all
+solve
+
+
+SAVE,'02-5volume','db','F:\wenpin\0415-batch'
+/post1
+esel,s,type,,2
+!PRESOL,S,COMP 
+
+
+
+
+
+
+
+
+
+
+
+
+
